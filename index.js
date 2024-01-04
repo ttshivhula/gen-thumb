@@ -10,21 +10,32 @@ const generatePreview = async (url) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-		await page.setUserAgent(
-			"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
-		)
-
+    await page.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36");
     await page.goto(url, { waitUntil: 'networkidle2' });
 
     const title = await page.title();
     const description = await page.$eval('meta[name="description"]', element => element.content);
-    const images = await page.evaluate(() => Array.from(document.images, img => img.src));
+
+    // Fetch Open Graph or Twitter preview image if available
+    let image;
+    try {
+        image = await page.$eval('meta[property="og:image"]', element => element.content);
+    } catch (e) {
+        try {
+            image = await page.$eval('meta[name="twitter:image"]', element => element.content);
+        } catch (e) {
+            // Fallback to the first image in the document
+            const images = await page.evaluate(() => Array.from(document.images, img => img.src));
+            image = images.length ? images[0] : undefined;
+        }
+    }
+
     await browser.close();
 
     return {
         title,
         description,
-        image: images.length ? images[0] : undefined
+        image
     };
 };
 
