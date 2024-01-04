@@ -8,7 +8,7 @@ const generatePreview = async (url) => {
 		followRedirects: 'follow',
 		headers: {
 			'user-agent':
-				'Slackbot-LinkExpanding 1.0 (+https://api.slack.com/robots)',
+				'Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)',
 		},
 		timeout: 15000,
 	});
