@@ -9,6 +9,11 @@ app.use(bodyParser.json());
 const generatePreview = async (url) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
+
+		await page.setUserAgent(
+			"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36"
+		)
+
     await page.goto(url, { waitUntil: 'networkidle2' });
 
     const title = await page.title();
