@@ -1,6 +1,7 @@
 const { getLinkPreview } = require('link-preview-js');
 const express = require('express');
 const bodyParser = require('body-parser');
+const port = process.env.PORT || 3000;
 
 const generatePreview = async (url) => {
 	const response = await getLinkPreview(url, {
@@ -25,8 +26,6 @@ const generatePreview = async (url) => {
 
 const app = express();
 
-const PORT = 3000;
-
 app.use(bodyParser.json());
 
 app.post('/generate-preview', async (req, res) => {
@@ -48,6 +47,6 @@ app.post('/generate-preview', async (req, res) => {
 	}
 });
 
-app.listen(PORT, () => {
-	console.log(`Server started on http://localhost:${PORT}`);
+app.listen(port, () => {
+	console.log(`Server started on http://localhost:${port}`);
 })
